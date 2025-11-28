@@ -1,0 +1,6 @@
+[default]
+db_uri = "mysql+pymysql://root:localhost/portal"
+title = "portal_emprego"
+extension = [
+        "portal.database:configure"
+]

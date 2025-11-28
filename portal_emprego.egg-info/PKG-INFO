@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: portal_emprego
+Version: 0.1.0
+Author: Mauro Zacarias 
+License: apache
+License-File: LICENSE
+Requires-Dist: flask
+Requires-Dist: Flask-SQLAlchemy
+Requires-Dist: PyMySQL
+Requires-Dist: dynaconf
+Requires-Dist: flask-bootstrap
+Dynamic: author
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist

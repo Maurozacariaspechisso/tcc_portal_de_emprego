@@ -1,0 +1,5 @@
+flask
+Flask-SQLAlchemy
+PyMySQL
+dynaconf
+flask-bootstrap
