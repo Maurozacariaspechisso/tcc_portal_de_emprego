@@ -9,6 +9,7 @@ Requires-Dist: Flask-SQLAlchemy
 Requires-Dist: PyMySQL
 Requires-Dist: dynaconf
 Requires-Dist: flask-bootstrap
+Requires-Dist: flask-migrate
 Dynamic: author
 Dynamic: license
 Dynamic: license-file
