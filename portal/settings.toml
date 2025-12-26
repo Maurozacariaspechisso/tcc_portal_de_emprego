@@ -1,5 +1,6 @@
+
 [default]
-db_uri = "mysql+pymysql://root:localhost/portal"
+db_uri = "mysql+pymysql://root:1981@localhost:3306/portal"
 title = "portal_emprego"
 extension = [
         "portal.database:configure"

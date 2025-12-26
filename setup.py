@@ -1,3 +1,4 @@
+# Arquivo responsavel por fazer nossa aplicacao ser instalavel via pip
 from setuptools import setup 
 
 
@@ -7,5 +8,5 @@ setup(
     version="0.1.0",
     packages=["portal"],
     license = "apache" ,
-    install_requires=["flask","Flask-SQLAlchemy","PyMySQL", "dynaconf","flask-bootstrap"]
+    install_requires=["flask","Flask-SQLAlchemy","PyMySQL", "dynaconf","flask-bootstrap","flask-migrate"]
 ) 

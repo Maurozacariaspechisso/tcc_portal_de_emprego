@@ -1,3 +1,4 @@
+#o Config e responsavel por configurar as variaveis de ambiente 
 import os 
 from dynaconf import FlaskDynaconf
 
