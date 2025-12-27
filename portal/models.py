@@ -1,7 +1,7 @@
-from database import configure
+from portal.database import db
 import datetime
 
-class usuario(db.model):
+class usuario(db.Model):
    __tablename__ = 'usuario'
 
    id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +10,7 @@ class usuario(db.model):
    senha = db.Column(db.String(255), nullable=False)
    tipo = db.Column(db.String(50), nullable=False)  
 
-   data_registro = db.Column(db.DateTime, default=datetime.utcnow)
+   #data_registro = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Candidato(db.Model):
     __tablename__ = "candidatos"
@@ -52,7 +52,7 @@ class vagas(db.Model):
    requisitos = db.Column(db.Text, nullable=False)
    localizacao = db.Column(db.String(150), nullable=False)
    salario = db.Column(db.String(100), nullable=True)
-   data_postagem = db.Column(db.DateTime, default=datetime.utcnow)
+   #data_postagem = db.Column(db.DateTime, default=datetime.utcnow)
 
    empresa = db.relationship("Empresa", back_populates="vagas")
 
@@ -66,7 +66,7 @@ class Candidatura(db.Model):
 
     candidato_id = db.Column(db.Integer, db.ForeignKey("candidatos.id"), nullable=False)
     vaga_id = db.Column(db.Integer, db.ForeignKey("vagas.id"), nullable=False)
-    data_candidatura = db.Column(db.DateTime, default=datetime.utcnow)
+    #data_candidatura = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(50), default="pendente")  # pendente / aceite / rejeitado
     cv_path = db.Column(db.String(255))  # caminho do arquivo do currículo
 

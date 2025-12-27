@@ -8,5 +8,5 @@ setup(
     version="0.1.0",
     packages=["portal"],
     license = "apache" ,
-    install_requires=["flask","Flask-SQLAlchemy","PyMySQL", "dynaconf","flask-bootstrap","flask-migrate"]
+    install_requires=["flask","Flask-SQLAlchemy", "dynaconf","flask-bootstrap","flask-migrate"]
 ) 

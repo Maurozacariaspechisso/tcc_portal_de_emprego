@@ -1,10 +1,12 @@
-#o Config e responsavel por configurar as variaveis de ambiente 
-import os 
-from dynaconf import FlaskDynaconf
+import os
 
-HERE=os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def configure(app):
-    FlaskDynaconf(app,extensIon_list="EXTENSION",root_path=HERE)
+    # Configuracao da base de dados SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'portal.db')}"
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
- 
+    # Iniciando a nossa base de dados 
+    from portal.database import configure as db_configure
+    db_configure(app)
