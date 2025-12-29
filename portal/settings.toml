@@ -4,4 +4,8 @@ db_uri = "mysql+pymysql://root:1981@localhost:3306/portal"
 title = "portal_emprego"
 extension = [
         "portal.database:configure"
+        "flask_SqlAlchemy:configure"
+        "flask_migrate:migrate"
+        "flask_bootsrap:bootsrap"
+        "portal.views:configure"
 ]
