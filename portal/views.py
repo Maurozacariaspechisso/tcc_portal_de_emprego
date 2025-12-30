@@ -8,7 +8,7 @@ from flask import (
     jsonify
 )
 from portal.database import db
-from portal.models import Vagas
+from portal.models import Vaga
 
 vaga_bp=Blueprint("vagas",__name__, template_folder ="template")
 

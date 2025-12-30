@@ -8,50 +8,57 @@ class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    senha = db.Column(db.String(200), nullable=False)
-    tipo = db.Column(db.String(50), nullable=False)  # 'candidato' ou 'recrutador'
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    senha = db.Column(db.String(255), nullable=False)
+    tipo = db.Column(db.String(50), nullable=False)
+    data_registro = db.Column(db.DateTime, default=datetime.utcnow)
 
-    candidatos = db.relationship("Candidato", backref="usuario", lazy=True)
+    candidatos = db.relationship("Candidato", back_populates="usuario", cascade="all, delete-orphan")
+    empresas = db.relationship("Empresa", back_populates="usuario", cascade="all, delete-orphan")
 
 
 class Candidato(db.Model):
     __tablename__ = "candidatos"
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
+
     telefone = db.Column(db.String(20))
-    endereco = db.Column(db.String(200))
+    provincia = db.Column(db.String(50))
     area_interesse = db.Column(db.String(100))
 
-    usuario = db.relationship("Usuario", backref=db.backref("candidato", uselist=False))
-    candidaturas = db.relationship("Candidatura", backref="candidato", lazy=True)
+    usuario = db.relationship("Usuario", back_populates="candidatos")
+    candidaturas = db.relationship("Candidatura", back_populates="candidato", cascade="all, delete-orphan")
+
 
 class Empresa(db.Model):
     __tablename__ = "empresas"
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
-    nome = db.Column(db.String(100), nullable=False)
-    localizacao = db.Column(db.String(200))
+    user_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
+
+    nome_empresa = db.Column(db.String(120), nullable=False)
+    localizacao = db.Column(db.String(120))
     descricao = db.Column(db.Text)
 
-    usuario = db.relationship("Usuario", backref=db.backref("empresa", uselist=False))
-    vagas = db.relationship("Vagas", backref="empresa", lazy=True)
+    usuario = db.relationship("Usuario", back_populates="empresas")
+    vagas = db.relationship("Vaga", back_populates="empresa", cascade="all, delete-orphan")
 
 class Vaga(db.Model):
     __tablename__ = "vagas"
 
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(100), nullable=False)
-    descricao = db.Column(db.Text, nullable=False)
-    localizacao = db.Column(db.String(200))
-    requisitos = db.Column(db.Text)
     empresa_id = db.Column(db.Integer, db.ForeignKey("empresas.id"), nullable=False)
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
 
-    empresa = db.relationship("Empresa", backref=db.backref("vagas_empresa", lazy=True))
-    candidaturas = db.relationship("Candidatura", backref="vaga", lazy=True)
+    titulo = db.Column(db.String(150), nullable=False)
+    descricao = db.Column(db.Text, nullable=False)
+    requisitos = db.Column(db.Text, nullable=False)
+    localizacao = db.Column(db.String(150), nullable=False)
+    salario = db.Column(db.String(100))
+    data_postagem = db.Column(db.DateTime, default=datetime.utcnow)
+
+    empresa = db.relationship("Empresa", back_populates="vagas")
+    candidaturas = db.relationship("Candidatura", back_populates="vaga", cascade="all, delete-orphan")
+
 
 class Candidatura(db.Model):
     __tablename__ = "candidaturas"
@@ -59,10 +66,12 @@ class Candidatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     candidato_id = db.Column(db.Integer, db.ForeignKey("candidatos.id"), nullable=False)
     vaga_id = db.Column(db.Integer, db.ForeignKey("vagas.id"), nullable=False)
-    data_candidatura = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(50), default="Pendente")  # Pendente, Aceito, Rejeitado
-    cv_path = db.Column(db.String(200))  
 
-    candidato = db.relationship("Candidato", backref=db.backref("candidaturas_candidato", lazy=True))
-    vaga = db.relationship("Vaga", backref=db.backref("candidaturas_vaga", lazy=True))
+    data_candidatura = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(50), default="pendente")
+    cv_path = db.Column(db.String(255))
+
+    candidato = db.relationship("Candidato", back_populates="candidaturas")
+    vaga = db.relationship("Vaga", back_populates="candidaturas")
+
 
