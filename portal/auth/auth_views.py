@@ -6,8 +6,8 @@ from portal.models import Usuario
 from portal.app import login_manager
 
 
- @login_manager.user_loader
- def load_user(user_id):
+@login_manager.user_loader
+def load_user(user_id):
     return Usuario.query.get(int(user_id))
 
 auth_bp = Blueprint("auth", __name__)

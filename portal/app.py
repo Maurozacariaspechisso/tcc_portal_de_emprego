@@ -1,10 +1,10 @@
 from flask import Flask
 from portal.config import configure
-from portal.views import vaga_bp
+from portal.views_vagas import vaga_bp
 from portal.database import db
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-
+from portal.views import bp as main_bp
 
 
 login_manager = LoginManager()
@@ -16,12 +16,16 @@ def create_app():
     app.secret_key = "Malika#10"  # cheve secreta para sessões
 
     configure(app)
-    db.init_app(app)
-
+    
+    app.register_blueprint(main_bp)
     login_manager.init_app(app)
     Bootstrap(app)
+
+
+    from portal.auth import auth_bp
+    app.register_blueprint(auth_bp)
+
     
-    from portal.auth.views import auth_bp
     app.register_blueprint(vaga_bp)
 
 
