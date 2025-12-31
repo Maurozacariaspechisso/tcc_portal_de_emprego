@@ -1,8 +1,9 @@
+from flask_login import UserMixin
 from portal.database import db
 from datetime import datetime
 
 
-class Usuario(db.Model):
+class Usuario(UserMixin, db.Model):
     __tablename__ = "usuarios"
 
     id = db.Column(db.Integer, primary_key=True)
