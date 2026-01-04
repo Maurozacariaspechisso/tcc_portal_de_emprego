@@ -1,12 +1,18 @@
-{% extends "base.html.j2" %}
+{% extends "base.html" %}
+
+{% block title %}Início | Portal Emprego{% endblock %}
 
 {% block content %}
+<div class="text-center">
+    <h1 class="mb-3">Bem-vindo ao Portal de Emprego</h1>
+    <p class="lead">
+        Encontre vagas, conecte-se com empresas e construa a sua carreira.
+    </p>
 
-<div class= "container" >
-
-<h1> {{config.get("Title")}} </h1>
-
-
-
+    {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
+            Criar Conta
+        </a>
+    {% endif %}
 </div>
 {% endblock %}

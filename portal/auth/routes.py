@@ -1,6 +1,16 @@
-from flask import render_template, redirect, url_for
-from portal.auth import auth_bp
+from flask import Blueprint, render_template
+
+auth_bp = Blueprint(
+    "auth",
+    __name__,
+    template_folder="../templates/auth",
+    url_prefix="/auth"
+)
 
 @auth_bp.route("/login")
 def login():
-    return render_template("auth/login.html")
+    return render_template("login.html")
+
+@auth_bp.route("/register")
+def register():
+    return render_template("register.html")

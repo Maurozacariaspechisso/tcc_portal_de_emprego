@@ -1,7 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 
-bp = Blueprint("main", __name__)
+public_bp = Blueprint("public", __name__)
 
-@bp.route("/")
+@public_bp.route("/")
 def index():
-    return "Portal de Emprego a funcionar"
+    return render_template("templates/index.html")

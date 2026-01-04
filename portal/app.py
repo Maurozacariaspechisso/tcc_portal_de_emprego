@@ -4,7 +4,7 @@ from portal.views_vagas import vaga_bp
 from portal.database import db
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from portal.views import bp as main_bp
+from portal.views import  public_bp
 
 
 login_manager = LoginManager()
@@ -17,7 +17,9 @@ def create_app():
 
     configure(app)
     
-    app.register_blueprint(main_bp)
+    from portal.views import public_bp
+    app.register_blueprint(public_bp)
+
     login_manager.init_app(app)
     Bootstrap(app)
 
