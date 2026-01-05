@@ -4,12 +4,9 @@ from portal.views_vagas import vaga_bp
 from portal.database import db
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from portal.views import  public_bp
+from portal.extensions import login_manager
 
 
-login_manager = LoginManager()
-login_manager.login_view = "auth.login"  # rota de login
-login_manager.login_message = "Faça login para continuar."
 
 def create_app():
     app = Flask(__name__)
@@ -17,15 +14,15 @@ def create_app():
 
     configure(app)
     
-    from portal.views import public_bp
-    app.register_blueprint(public_bp)
+    from portal.main import main_bp
+    app.register_blueprint(main_bp)
 
     login_manager.init_app(app)
     Bootstrap(app)
 
 
     from portal.auth import auth_bp
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp,url_prefix="/auth")
 
     
     app.register_blueprint(vaga_bp)

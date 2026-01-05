@@ -3,14 +3,14 @@ from portal.main import main_bp
 
 @main_bp.route("/")
 def index():
-    return render_template("main/index.html")
+    return render_template("main/index.html.j2")
 
 
 @main_bp.route("/vagas")
 def vagas():
-    return render_template("main/vagas.html")
+    return render_template("main/vagas.html.j2")
 
 
 @main_bp.route("/sobre")
 def sobre():
-    return render_template("main/sobre.html")
+    return render_template("main/sobre.html.j2")
