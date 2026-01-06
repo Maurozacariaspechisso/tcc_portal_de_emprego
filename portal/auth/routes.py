@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template,redirect,url_for,flash,request
-from portal.extensions import db
+from portal.database import db
 from portal.models import Usuario
 from flask_login import logout_user
 

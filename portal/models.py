@@ -1,7 +1,8 @@
 from flask_login import UserMixin
 from portal.database import db
 from datetime import datetime
-from portal.extensions import db, login_manager
+from portal.database import db
+from portal.extensions import  login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Usuario(UserMixin, db.Model):

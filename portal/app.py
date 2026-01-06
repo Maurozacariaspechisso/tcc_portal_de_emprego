@@ -1,7 +1,7 @@
 from flask import Flask
 from portal.config import configure
 from portal.views_vagas import vaga_bp
-from portal.database import db
+from portal.database import db,migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from portal.extensions import login_manager
@@ -14,8 +14,6 @@ def create_app():
 
     configure(app)
     
-    db.init_app(app)
-
     login_manager.init_app(app)
     Bootstrap(app)
 
