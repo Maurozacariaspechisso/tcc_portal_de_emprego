@@ -14,14 +14,14 @@ def create_app():
 
     configure(app)
     
-    from portal.main import main_bp
-    app.register_blueprint(main_bp)
+    db.init_app(app)
 
     login_manager.init_app(app)
     Bootstrap(app)
 
-
+    from portal.main import main_bp
     from portal.auth import auth_bp
+    app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp,url_prefix="/auth")
 
     

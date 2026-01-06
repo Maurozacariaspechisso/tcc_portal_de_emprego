@@ -1,10 +1,11 @@
 from flask import render_template
 from portal.main import main_bp
+from flask_login import login_required, current_user
 
 @main_bp.route("/")
+@login_required
 def index():
-    return render_template("main/index.html.j2")
-
+    return render_template("main/index.html.j2", Usuario=current_user)
 
 @main_bp.route("/vagas")
 def vagas():

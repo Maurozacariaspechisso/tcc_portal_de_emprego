@@ -1,7 +1,8 @@
 from flask_login import UserMixin
 from portal.database import db
 from datetime import datetime
-
+from portal.extensions import db, login_manager
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Usuario(UserMixin, db.Model):
     __tablename__ = "usuarios"
@@ -16,6 +17,15 @@ class Usuario(UserMixin, db.Model):
     candidatos = db.relationship("Candidato", back_populates="usuario", cascade="all, delete-orphan")
     empresas = db.relationship("Empresa", back_populates="usuario", cascade="all, delete-orphan")
 
+    def set_password(self, senha):
+        self.senha = generate_password_hash(senha)
+
+    def check_password(self, senha):
+        return check_password_hash(self.senha, senha)
+        
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class Candidato(db.Model):
     __tablename__ = "candidatos"
