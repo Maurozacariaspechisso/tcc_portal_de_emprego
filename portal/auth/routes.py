@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template,redirect,url_for,flash,request
+from flask import Blueprint, render_template,redirect,url_for,flash,request,abort
 from portal.database import db
-from portal.models import Usuario
-from flask_login import login_user, logout_user, login_required
+from portal.models import Usuario ,Candidato ,Empresa
+from flask_login import login_user, logout_user, login_required,current_user
+from werkzeug.security import generate_password_hash
 
 
 auth_bp = Blueprint(
@@ -34,26 +35,43 @@ def register():
         nome = request.form["nome"]
         email = request.form["email"]
         senha = request.form["senha"]
-        tipo = request.form["tipo"]
+        tipo = request.form["tipo"]  # candidato | empresa
 
+        # valida email duplicado
         if Usuario.query.filter_by(email=email).first():
-            flash("Email já registrado. Por favor, use outro email.")
+            flash("Email já cadastrado", "danger")
             return redirect(url_for("auth.register"))
 
-        usuario = Usuario(nome=nome, email=email, tipo=tipo)
+        # cria usuário
+        usuario = Usuario(
+            email=email,
+            role=tipo
+        )
         usuario.set_password(senha)
+
         db.session.add(usuario)
         db.session.commit()
 
-        flash("Formulario enviado com sucesso!", "success")
+        # cria perfil conforme o papel
+        if tipo == "candidato":
+            perfil = Candidato(nome=nome, usuario_id=usuario.id)
+        elif tipo == "empresa":
+            perfil = Empresa(nome=nome, usuario_id=usuario.id)
+        else:
+            abort(400)
+
+        db.session.add(perfil)
+        db.session.commit()
+
+        flash("Conta criada com sucesso", "success")
         return redirect(url_for("auth.login"))
-    return render_template("register.html.j2")
 
-
+    return render_template("auth/register.html.j2")
 
 
 
 @auth_bp.route("/logout")
+@login_required
 def logout():
     logout_user()
     flash("Sessão encerrada.", "info")
