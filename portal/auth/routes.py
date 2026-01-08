@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template,redirect,url_for,flash,request
 from portal.database import db
 from portal.models import Usuario
-from flask_login import logout_user
+from flask_login import login_user, logout_user, login_required
+
 
 auth_bp = Blueprint(
     "auth",
