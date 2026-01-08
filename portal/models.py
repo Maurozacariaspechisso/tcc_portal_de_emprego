@@ -12,8 +12,10 @@ class Usuario(UserMixin, db.Model):
     nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(255), nullable=False)
-    tipo = db.Column(db.String(50), nullable=False)
+    
     data_registro = db.Column(db.DateTime, default=datetime.utcnow)
+
+    role = db.Column(db.String(20), nullable=False)  # candidato | empresa
 
     candidatos = db.relationship("Candidato", back_populates="usuario", cascade="all, delete-orphan")
     empresas = db.relationship("Empresa", back_populates="usuario", cascade="all, delete-orphan")
@@ -38,9 +40,12 @@ class Candidato(db.Model):
     provincia = db.Column(db.String(50))
     area_interesse = db.Column(db.String(100))
 
-    usuario = db.relationship("Usuario", back_populates="candidatos")
-    candidaturas = db.relationship("Candidatura", back_populates="candidato", cascade="all, delete-orphan")
-
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id"),
+        unique=True,
+        nullable=False
+    )
 
 class Empresa(db.Model):
     __tablename__ = "empresas"
@@ -52,9 +57,13 @@ class Empresa(db.Model):
     localizacao = db.Column(db.String(120))
     descricao = db.Column(db.Text)
 
-    usuario = db.relationship("Usuario", back_populates="empresas")
-    vagas = db.relationship("Vaga", back_populates="empresa", cascade="all, delete-orphan")
-
+    
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id"),
+        unique=True,
+        nullable=False
+    )
 class Vaga(db.Model):
     __tablename__ = "vagas"
 
