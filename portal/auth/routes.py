@@ -44,6 +44,7 @@ def register():
 
         # cria usuário
         usuario = Usuario(
+            nome=nome,
             email=email,
             role=tipo
         )
@@ -54,9 +55,9 @@ def register():
 
         # cria perfil conforme o papel
         if tipo == "candidato":
-            perfil = Candidato(nome=nome, usuario_id=usuario.id)
+            perfil = Candidato(usuario_id=usuario.id)
         elif tipo == "empresa":
-            perfil = Empresa(nome=nome, usuario_id=usuario.id)
+            perfil = Empresa(nome_empresa=nome, usuario_id=usuario.id)
         else:
             abort(400)
 
@@ -66,7 +67,7 @@ def register():
         flash("Conta criada com sucesso", "success")
         return redirect(url_for("auth.login"))
 
-    return render_template("auth/register.html.j2")
+    return render_template("register.html.j2")
 
 
 
