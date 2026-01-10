@@ -7,13 +7,17 @@ from flask import (
     redirect,
     jsonify
 )
+from flask_login import login_required, current_user
 from portal.database import db
 from portal.models import Vaga
+from portal.decorators import role_required
 
 
 vaga_bp=Blueprint("vagas",__name__, template_folder ="template")
 
 @vaga_bp.route("/vagas",methods=["POST","GET"])
+@login_required
+@role_required("empresa")
 def criar_vaga():
     data = request.json
     vaga = Vagas(
