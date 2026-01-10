@@ -21,6 +21,13 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.register') }}">Cadastro</a>
             </li>
+            <li>
+            {% if current_user.is_authenticated and current_user.role == "empresa" %}
+            <a href="{{ url_for('vaga.nova_vaga') }}" class="nav-link">
+              Publicar Vaga
+            </a>
+            </li>
+
         {% endif %}
 
       </ul>

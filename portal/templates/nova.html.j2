@@ -1,0 +1,36 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Nova Vaga{% endblock %}
+
+{% block content %}
+<h3>Publicar Nova Vaga</h3>
+
+<form method="post">
+  <div class="mb-3">
+    <label>Título</label>
+    <input type="text" name="titulo" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label>Descrição</label>
+    <textarea name="descricao" class="form-control" required></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label>Requisitos</label>
+    <textarea name="requisitos" class="form-control" required></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label>Localização</label>
+    <input type="text" name="localizacao" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label>Salário (opcional)</label>
+    <input type="text" name="salario" class="form-control">
+  </div>
+
+  <button class="btn btn-success">Publicar</button>
+</form>
+{% endblock %}
