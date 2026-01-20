@@ -5,7 +5,7 @@ from flask import (
     url_for,
     request,
     redirect,
-    jsonify
+    jsonify,flash
 )
 from flask_login import login_required, current_user
 from portal.database import db
