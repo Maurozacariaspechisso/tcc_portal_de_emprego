@@ -9,7 +9,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from portal.database import db
-from portal.models import Vaga
+from portal.models import Vaga , Empresa
 from portal.decorators import role_required
 
 
