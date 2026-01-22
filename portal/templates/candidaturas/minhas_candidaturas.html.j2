@@ -1,0 +1,45 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2 class="mb-4">Minhas Candidaturas</h2>
+
+  {% if candidaturas %}
+
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Vaga</th>
+          <th>Empresa</th>
+          <th>Data</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in candidaturas %}
+        <tr>
+          <td>{{ c.vaga.titulo }}</td>
+          <td>{{ c.vaga.empresa.nome_empresa }}</td>
+          <td>{{ c.data_candidatura.strftime("%d/%m/%Y") }}</td>
+          <td>
+            <span class="badge
+              {% if c.status == 'pendente' %}bg-warning
+              {% elif c.status == 'aceite' %}bg-success
+              {% else %}bg-danger{% endif %}">
+              {{ c.status }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  {% else %}
+    <div class="alert alert-info">
+      Ainda não se candidatou a nenhuma vaga.
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
