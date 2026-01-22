@@ -1,0 +1,24 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<h2>Vagas disponíveis</h2>
+
+{% if vagas %}
+  <div class="vagas">
+    {% for vaga in vagas %}
+      <div class="vaga-card">
+        <h3>{{ vaga.titulo }}</h3>
+        <p><strong>Empresa:</strong> {{ vaga.empresa.nome }}</p>
+        <p><strong>Localização:</strong> {{ vaga.localizacao }}</p>
+        <p><strong>Tipo:</strong> {{ vaga.tipo }}</p>
+        <p>{{ vaga.descricao[:200] }}...</p>
+
+        <a href="#" class="btn btn-primary">Ver detalhes</a>
+      </div>
+      <hr>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Nenhuma vaga publicada até o momento.</p>
+{% endif %}
+{% endblock %}

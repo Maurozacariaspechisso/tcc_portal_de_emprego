@@ -1,0 +1,12 @@
+<h2>{{ vaga.titulo }}</h2>
+
+<p><strong>Descrição:</strong> {{ vaga.descricao }}</p>
+<p><strong>Requisitos:</strong> {{ vaga.requisitos }}</p>
+<p><strong>Localização:</strong> {{ vaga.localizacao }}</p>
+<p><strong>Salário:</strong> {{ vaga.salario or "A combinar" }}</p>
+
+{% if current_user.is_authenticated and current_user.role == "candidato" %}
+<form method="POST" action="{{ url_for('vagas.candidatar_vaga', vaga_id=vaga.id) }}">
+    <button type="submit">Candidatar-se</button>
+</form>
+{% endif %}

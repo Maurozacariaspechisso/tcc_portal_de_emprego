@@ -19,6 +19,7 @@ def create_app():
 
     from portal.main import main_bp
     from portal.auth import auth_bp
+    from portal.views_vagas import vaga_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp,url_prefix="/auth")
 
