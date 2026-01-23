@@ -1,2 +1,2 @@
 # tcc_portal_de_emprego
-desenvolvendo um portal de emprego com recomendacao de perfil com inteligencia artificial
+Estou desenvolvendo um portal de emprego com recomendacao de perfil com inteligencia artificial , esse portal vai servir como base para mostrar minhas habilidades adquiridas na minha formacao , esse portal vai usar python como linguagem principal e flask como nosso framework , vamso utilizar o aplication factory  como nossa arquitetura , vamos usar bibliotecas como pandas para analise e manipulacao de dados .
