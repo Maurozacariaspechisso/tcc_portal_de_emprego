@@ -43,9 +43,26 @@ def listar_vagas():
 @vaga_bp.route("/<int:vaga_id>")
 def detalhe_vaga(vaga_id):
     vaga = Vaga.query.get_or_404(vaga_id)
-    return render_template("vagas/detalhe.html.j2", vaga=vaga)
 
+    ja_candidatou = False
 
+    if current_user.is_authenticated and current_user.role == "candidato":
+        candidato = Candidato.query.filter_by(
+            usuario_id=current_user.id
+        ).first()
+
+        if candidato:
+            candidatura = Candidatura.query.filter_by(
+                candidato_id=candidato.id,
+                vaga_id=vaga.id
+            ).first()
+            ja_candidatou = candidatura is not None
+
+    return render_template(
+        "vagas/detalhe.html.j2",
+        vaga=vaga,
+        ja_candidatou=ja_candidatou
+    )
 
 # 3. CRIAR NOVA VAGA (EMPRESA)
 

@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<h2>Candidaturas Recebidas</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Candidato</th>
+            <th>Vaga</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c in candidaturas %}
+        <tr>
+            <td>{{ c.candidato.nome }}</td>
+            <td>{{ c.vaga.titulo }}</td>
+            <td>
+                {% if c.status == "pendente" %}
+                    <span class="badge bg-secondary">Pendente</span>
+                {% elif c.status == "aceite" %}
+                    <span class="badge bg-success">Aceite</span>
+                {% else %}
+                    <span class="badge bg-danger">Rejeitada</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if c.status == "pendente" %}
+                <form method="post" action="{{ url_for('candidaturas.aceitar_candidatura', id=c.id) }}" style="display:inline;">
+                    <button class="btn btn-sm btn-success">Aceitar</button>
+                </form>
+
+                <form method="post" action="{{ url_for('candidaturas.rejeitar_candidatura', id=c.id) }}" style="display:inline;">
+                    <button class="btn btn-sm btn-danger">Rejeitar</button>
+                </form>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

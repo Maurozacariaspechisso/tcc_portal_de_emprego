@@ -1,62 +1,39 @@
 {% extends "base.html.j2" %}
 
-{% block title %}
-Vagas Disponíveis
-{% endblock %}
+{% block title %}Vagas Disponíveis{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
 
     <h2 class="mb-4">Vagas Disponíveis</h2>
 
-    {# mensagens flash #}
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
     {% if vagas %}
-        {% for vaga in vagas %}
-        <div class="card mb-3 shadow-sm">
-            <div class="card-body">
-
-                <h5 class="card-title">{{ vaga.titulo }}</h5>
-
-                <p class="card-text">
-                    {{ vaga.descricao }}
-                </p>
-
-                <ul class="list-unstyled text-muted">
-                    <li><strong>Empresa:</strong> {{ vaga.empresa.nome_empresa }}</li>
-                    <li><strong>Localização:</strong> {{ vaga.localizacao }}</li>
-                    {% if vaga.salario %}
-                    <li><strong>Salário:</strong> {{ vaga.salario }}</li>
-                    {% endif %}
-                </ul>
-
-                {# botão apenas para candidatos #}
-                {% if current_user.is_authenticated and current_user.role == "candidato" %}
-                <form method="post"
-                      action="{{ url_for('candidaturas.candidatar', vaga_id=vaga.id) }}">
-                    <button type="submit" class="btn btn-primary">
-                        Candidatar-se
-                    </button>
-                </form>
-                {% endif %}
-
-            </div>
+        <div class="list-group">
+            {% for vaga in vagas %}
+                <div class="list-group-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5>
+                                <a href="{{ url_for('vagas.detalhe_vaga', vaga_id=vaga.id) }}">
+                                    {{ vaga.titulo }}
+                                </a>
+                            </h5>
+                            <p class="mb-1">{{ vaga.descricao[:150] }}{% if vaga.descricao|length > 150 %}...{% endif %}</p>
+                            <small class="text-muted">
+                                Local: {{ vaga.localizacao }} | Salário: {{ vaga.salario if vaga.salario else "Não informado" }}
+                            </small>
+                        </div>
+                        {% if current_user.is_authenticated and current_user.role == 'candidato' %}
+                            <form action="{{ url_for('candidaturas.candidatar', vaga_id=vaga.id) }}" method="POST">
+                                <button type="submit" class="btn btn-primary btn-sm">Candidatar-se</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     {% else %}
-        <div class="alert alert-info">
-            Nenhuma vaga disponível no momento.
-        </div>
+        <p>Nenhuma vaga disponível no momento.</p>
     {% endif %}
 
 </div>
