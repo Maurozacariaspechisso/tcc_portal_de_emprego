@@ -11,9 +11,9 @@ candidaturas_bp = Blueprint(
     url_prefix="/candidaturas"
 )
 
-# =========================================================
+
 # CANDIDATO – CANDIDATAR-SE A UMA VAGA
-# =========================================================
+
 @candidaturas_bp.route("/candidatar/<int:vaga_id>", methods=["POST"])
 @login_required
 @role_required("candidato")
@@ -51,9 +51,9 @@ def candidatar(vaga_id):
     return redirect(url_for("candidaturas.minhas_candidaturas"))
 
 
-# =========================================================
+
 # CANDIDATO – MINHAS CANDIDATURAS
-# =========================================================
+
 @candidaturas_bp.route("/minhas")
 @login_required
 @role_required("candidato")
@@ -80,9 +80,9 @@ def minhas_candidaturas():
     )
 
 
-# =========================================================
+
 # EMPRESA – LISTAR CANDIDATURAS DAS SUAS VAGAS
-# =========================================================
+
 @candidaturas_bp.route("/empresa")
 @login_required
 @role_required("empresa")
@@ -110,9 +110,9 @@ def candidaturas_empresa():
     )
 
 
-# =========================================================
+
 # EMPRESA – ACEITAR CANDIDATURA
-# =========================================================
+
 @candidaturas_bp.route("/<int:id>/aceitar", methods=["POST"])
 @login_required
 @role_required("empresa")
@@ -135,9 +135,9 @@ def aceitar_candidatura(id):
     return redirect(url_for("candidaturas.candidaturas_empresa"))
 
 
-# =========================================================
+
 # EMPRESA – REJEITAR CANDIDATURA
-# =========================================================
+
 @candidaturas_bp.route("/<int:id>/rejeitar", methods=["POST"])
 @login_required
 @role_required("empresa")

@@ -1,45 +1,35 @@
 {% extends "base.html.j2" %}
+{% block title %}Minhas candidaturas{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
 
-  <h2 class="mb-4">Minhas Candidaturas</h2>
+<h2 class="mb-4 fw-bold">Minhas candidaturas</h2>
 
-  {% if candidaturas %}
-
-    <table class="table table-bordered table-hover">
-      <thead class="table-dark">
+<table class="table table-striped table-hover shadow-sm">
+    <thead class="table-primary">
         <tr>
-          <th>Vaga</th>
-          <th>Empresa</th>
-          <th>Data</th>
-          <th>Status</th>
+            <th>Vaga</th>
+            <th>Empresa</th>
+            <th>Status</th>
         </tr>
-      </thead>
-      <tbody>
+    </thead>
+    <tbody>
         {% for c in candidaturas %}
         <tr>
-          <td>{{ c.vaga.titulo }}</td>
-          <td>{{ c.vaga.empresa.nome_empresa }}</td>
-          <td>{{ c.data_candidatura.strftime("%d/%m/%Y") }}</td>
-          <td>
-            <span class="badge
-              {% if c.status == 'pendente' %}bg-warning
-              {% elif c.status == 'aceite' %}bg-success
-              {% else %}bg-danger{% endif %}">
-              {{ c.status }}
-            </span>
-          </td>
+            <td>{{ c.vaga.titulo }}</td>
+            <td>{{ c.vaga.empresa.nome }}</td>
+            <td>
+                <span class="badge bg-
+                    {% if c.status == 'pendente' %}warning
+                    {% elif c.status == 'aceite' %}success
+                    {% else %}danger{% endif %}
+                ">
+                    {{ c.status }}
+                </span>
+            </td>
         </tr>
         {% endfor %}
-      </tbody>
-    </table>
+    </tbody>
+</table>
 
-  {% else %}
-    <div class="alert alert-info">
-      Ainda não se candidatou a nenhuma vaga.
-    </div>
-  {% endif %}
-
-</div>
 {% endblock %}
