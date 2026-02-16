@@ -1,77 +1,61 @@
 from flask import (
     Blueprint,
     render_template,
-    url_for,
-    request,
     redirect,
-    jsonify,
+    url_for,
     flash,
-    abort
+    request
 )
 from flask_login import login_required, current_user
 
 from portal.database import db
-from portal.models import Vaga, Empresa, Candidato, Candidatura
+from portal.models import Vaga, Empresa, Candidatura
 from portal.decorators import role_required
 
-
-vaga_bp = Blueprint(
+# Blueprint
+vagas_bp = Blueprint(
     "vagas",
     __name__,
-    url_prefix="/vagas",
-    template_folder="../templates/vagas"
+    url_prefix="/vagas"
 )
 
 
-# 1. LISTAR VAGAS 
-@vaga_bp.route("/")
+#  LISTAR TODAS AS VAGAS (PÚBLICO / CANDIDATO)
+
+@vagas_bp.route("/")
 def listar_vagas():
     termo = request.args.get("q")
 
-    query = Vaga.query
+    query = Vaga.query.order_by(Vaga.data_postagem.desc())
 
     if termo:
-        query = query.filter(Vaga.titulo.ilike(f"%{termo}%"))
+        query = query.filter(
+            Vaga.titulo.ilike(f"%{termo}%") |
+            Vaga.localizacao.ilike(f"%{termo}%")
+        )
 
-    vagas = query.order_by(Vaga.data_postagem.desc()).all()
+    vagas = query.all()
+
     return render_template("vagas/listar.html.j2", vagas=vagas)
 
 
-
-# 2. DETALHES DA VAGA
-
-@vaga_bp.route("/<int:vaga_id>")
+#  DETALHE DA VAGA
+@vagas_bp.route("/<int:vaga_id>")
 def detalhe_vaga(vaga_id):
     vaga = Vaga.query.get_or_404(vaga_id)
+    return render_template("vagas/detalhe.html.j2", vaga=vaga)
 
-    ja_candidatou = False
 
-    if current_user.is_authenticated and current_user.role == "candidato":
-        candidato = Candidato.query.filter_by(
-            usuario_id=current_user.id
-        ).first()
 
-        if candidato:
-            candidatura = Candidatura.query.filter_by(
-                candidato_id=candidato.id,
-                vaga_id=vaga.id
-            ).first()
-            ja_candidatou = candidatura is not None
-
-    return render_template(
-        "vagas/detalhe.html.j2",
-        vaga=vaga,
-        ja_candidatou=ja_candidatou
-    )
-
-# 3. CRIAR NOVA VAGA (EMPRESA)
-
-@vaga_bp.route("/nova", methods=["GET", "POST"])
+#  CRIAR NOVA VAGA (EMPRESA)
+@vagas_bp.route("/nova", methods=["GET", "POST"])
 @login_required
 @role_required("empresa")
 def nova_vaga():
 
-    empresa = Empresa.query.filter_by(usuario_id=current_user.id).first()
+    empresa = Empresa.query.filter_by(
+        usuario_id=current_user.id
+    ).first()
 
     if not empresa:
         flash("Perfil de empresa não encontrado.", "danger")
@@ -91,81 +75,62 @@ def nova_vaga():
         db.session.commit()
 
         flash("Vaga publicada com sucesso!", "success")
-        return redirect(url_for("vagas.listar_vagas"))
+        return redirect(url_for("vagas.minhas_vagas"))
 
     return render_template("vagas/nova.html.j2")
 
 
 
-# 4. CANDIDATAR-SE A UMA VAGA (CANDIDATO)
-
-@vaga_bp.route("/<int:vaga_id>/candidatar", methods=["POST"])
-@login_required
-@role_required("candidato")
-def candidatar_vaga(vaga_id):
-
-    vaga = Vaga.query.get_or_404(vaga_id)
-
-    candidato = Candidato.query.filter_by(usuario_id=current_user.id).first()
-
-    if not candidato:
-        flash("Perfil de candidato não encontrado.", "danger")
-        return redirect(url_for("vagas.listar_vagas"))
-
-    # Evita candidatura duplicada
-    candidatura_existente = Candidatura.query.filter_by(
-        candidato_id=candidato.id,
-        vaga_id=vaga.id
-    ).first()
-
-    if candidatura_existente:
-        flash("Você já se candidatou a esta vaga.", "warning")
-        return redirect(url_for("vagas.detalhe_vaga", vaga_id=vaga.id))
-
-    candidatura = Candidatura(
-        candidato_id=candidato.id,
-        vaga_id=vaga.id
-    )
-
-    db.session.add(candidatura)
-    db.session.commit()
-
-    flash("Candidatura realizada com sucesso!", "success")
-    return redirect(url_for("vagas.detalhe_vaga", vaga_id=vaga.id))
-
-
-
-# 5. LISTAR CANDIDATURAS DA EMPRESA
-
-@vaga_bp.route("/minhas/candidaturas")
+#  VAGAS DA EMPRESA LOGADA
+@vagas_bp.route("/minhas")
 @login_required
 @role_required("empresa")
-def candidaturas_empresa():
+def minhas_vagas():
 
-    empresa = Empresa.query.filter_by(usuario_id=current_user.id).first()
+    empresa = Empresa.query.filter_by(
+        usuario_id=current_user.id
+    ).first()
 
     if not empresa:
-        abort(403)
+        flash("Perfil de empresa não encontrado.", "danger")
+        return redirect(url_for("main.index"))
 
-    vagas = Vaga.query.filter_by(empresa_id=empresa.id).all()
+    vagas = Vaga.query.filter_by(
+        empresa_id=empresa.id
+    ).all()
 
     return render_template(
-        "vagas/candidaturas_empresa.html.j2",
+        "vagas/minhas.html.j2",
         vagas=vagas
     )
 
 
 
-# 6. API JSON (OPCIONAL)
+#CANDIDATURAS PARA UMA VAGA (EMPRESA)
 
-@vaga_bp.route("/api", methods=["GET"])
-def vagas_api():
-    vagas = Vaga.query.all()
-    return jsonify([
-        {
-            "id": v.id,
-            "titulo": v.titulo,
-            "empresa_id": v.empresa_id
-        }
-        for v in vagas
-    ])
+@vagas_bp.route("/<int:vaga_id>/candidaturas")
+@login_required
+@role_required("empresa")
+def candidaturas_vaga(vaga_id):
+
+    vaga = Vaga.query.get_or_404(vaga_id)
+
+    empresa = Empresa.query.filter_by(
+        usuario_id=current_user.id
+    ).first()
+
+    if vaga.empresa_id != empresa.id:
+        flash("Acesso não autorizado.", "danger")
+        return redirect(url_for("vagas.minhas_vagas"))
+
+    candidaturas = (
+        Candidatura.query
+        .filter_by(vaga_id=vaga.id)
+        .all()
+    )
+
+    return render_template(
+        "vagas/candidaturas_empresa.html.j2",
+        vaga=vaga,
+        candidaturas=candidaturas
+    )

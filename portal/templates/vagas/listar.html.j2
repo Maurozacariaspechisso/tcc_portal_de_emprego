@@ -1,61 +1,91 @@
 {% extends "base.html.j2" %}
-{% block title %}Vagas disponíveis{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
 
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h2 class="fw-bold">Vagas disponíveis</h2>
-        <p class="text-muted">Encontre oportunidades compatíveis com seu perfil</p>
+    <!-- TÍTULO -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Vagas Disponíveis</h2>
     </div>
 
-    <div class="col-md-4">
-        <form method="get">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Pesquisar vaga...">
-                <button class="btn btn-primary">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+    <!-- BARRA DE PESQUISA -->
+    <form method="GET" action="{{ url_for('vagas.listar_vagas') }}" class="mb-4">
+        <div class="input-group">
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="Pesquisar por título, localização..."
+                   value="{{ request.args.get('q', '') }}">
+            <button class="btn btn-primary" type="submit">
+                Pesquisar
+            </button>
+        </div>
+    </form>
 
-<div class="row">
-    {% for vaga in vagas %}
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title">{{ vaga.titulo }}</h5>
-                    <p class="text-muted small">{{ vaga.localizacao }}</p>
+    <!-- LISTA DE VAGAS -->
+    {% if vagas %}
 
-                    <p class="card-text">
-                        {{ vaga.descricao[:120] }}...
-                    </p>
+        {% for vaga in vagas %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
 
-                    <span class="badge bg-secondary">
-                        {{ vaga.empresa.nome }}
-                    </span>
-                </div>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-1">
+                            {{ vaga.titulo }}
+                        </h5>
 
-                <div class="card-footer bg-white border-0">
-                    {% if current_user.is_authenticated and current_user.role == "candidato" %}
-                        <form action="{{ url_for('candidaturas.candidatar', vaga_id=vaga.id) }}" method="post">
-                            <button class="btn btn-success w-100">
-                                <i class="bi bi-send"></i> Candidatar-se
-                            </button>
-                        </form>
-                    {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary w-100">
-                            Entrar para candidatar
-                        </a>
+                        <small class="text-muted">
+                            {{ vaga.localizacao }} |
+                            Publicada em {{ vaga.data_postagem.strftime('%d/%m/%Y') }}
+                        </small>
+                    </div>
+
+                    {% if vaga.salario %}
+                    <div class="text-end">
+                        <span class="badge bg-success">
+                            {{ vaga.salario }}
+                        </span>
+                    </div>
                     {% endif %}
                 </div>
+
+                <hr>
+
+                <p class="card-text">
+                    {{ vaga.descricao[:180] }}{% if vaga.descricao|length > 180 %}...{% endif %}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <!-- BOTÃO DETALHES -->
+                    <a href="{{ url_for('vagas.detalhe_vaga', vaga_id=vaga.id) }}"
+                       class="btn btn-outline-primary btn-sm">
+                        Ver detalhes
+                    </a>
+
+                    <!-- BOTÃO CANDIDATAR -->
+                    {% if current_user.is_authenticated and current_user.role == "candidato" %}
+                        <form method="POST"
+                              action="{{ url_for('candidaturas.candidatar', vaga_id=vaga.id) }}">
+                            <button type="submit"
+                                    class="btn btn-success btn-sm">
+                                Candidatar-se
+                            </button>
+                        </form>
+                    {% endif %}
+
+                </div>
+
             </div>
         </div>
-    {% else %}
-        <p class="text-center text-muted">Nenhuma vaga disponível.</p>
-    {% endfor %}
-</div>
+        {% endfor %}
 
+    {% else %}
+        <div class="alert alert-info text-center">
+            Nenhuma vaga encontrada.
+        </div>
+    {% endif %}
+
+</div>
 {% endblock %}

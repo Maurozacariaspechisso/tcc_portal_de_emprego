@@ -1,56 +1,53 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}">
-            <i class="bi bi-briefcase-fill"></i> Portal Emprego
-        </a>
+  <div class="container">
 
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">
+      <i class="bi bi-briefcase-fill"></i> Portal Emprego
+    </a>
 
-        <div id="nav" class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto align-items-center gap-2">
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('vagas.listar_vagas') }}">
-                        <i class="bi bi-search"></i> Vagas
-                    </a>
-                </li>
+    <div id="nav" class="collapse navbar-collapse">
 
-                {% if current_user.is_authenticated %}
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
 
-                    {% if current_user.role == "empresa" %}
-                        <li class="nav-item">
-                            <a class="btn btn-light btn-sm" href="{{ url_for('vagas.nova_vaga') }}">
-                                <i class="bi bi-plus-circle"></i> Nova vaga
-                            </a>
-                        </li>
-                    {% endif %}
+        {% if current_user.is_authenticated %}
 
-                    {% if current_user.role == "candidato" %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('candidaturas.minhas_candidaturas') }}">
-                                <i class="bi bi-file-earmark-text"></i> Minhas candidaturas
-                            </a>
-                        </li>
-                    {% endif %}
+          <li class="nav-item text-light me-2">
+            Olá, <strong>{{ current_user.email }}</strong>
+          </li>
 
-                    <li class="nav-item">
-                        <a class="btn btn-danger btn-sm" href="{{ url_for('auth.logout') }}">
-                            Sair
-                        </a>
-                    </li>
+          {% if current_user.role == "candidato" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('vagas.listar_vagas') }}">Vagas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('candidaturas.minhas_candidaturas') }}">
+                Minhas candidaturas
+              </a>
+            </li>
+          {% endif %}
 
-                {% else %}
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.login') }}">Entrar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-light btn-sm" href="{{ url_for('auth.register') }}">Cadastrar</a>
-                    </li>
-                {% endif %}
+          {% if current_user.role == "empresa" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('vagas.nova_vaga') }}">Nova vaga</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('empresa.dashboard') }}">
+                Minhas vagas
+              </a>
+            </li>
+          {% endif %}
 
-            </ul>
-        </div>
+          <li class="nav-item">
+            <a class="btn btn-danger btn-sm" href="{{ url_for('auth.logout') }}">Sair</a>
+          </li>
+
+        {% endif %}
+
+      </ul>
     </div>
+  </div>
 </nav>

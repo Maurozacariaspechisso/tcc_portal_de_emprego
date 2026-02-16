@@ -1,0 +1,41 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Dashboard da Empresa</h2>
+
+    {% if vagas %}
+        <div class="row">
+            {% for vaga in vagas %}
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ vaga.titulo }}</h5>
+                            <p class="card-text">
+                                <strong>Localização:</strong> {{ vaga.localizacao }}<br>
+                                <strong>Data:</strong> {{ vaga.data_postagem.strftime('%d/%m/%Y') }}
+                            </p>
+
+                            <a href="{{ url_for('vagas.candidaturas_vaga', vaga_id=vaga.id) }}"
+                               class="btn btn-primary btn-sm">
+                                Ver Candidaturas
+                            </a>
+
+                            <a href="{{ url_for('vagas.detalhe_vaga', vaga_id=vaga.id) }}"
+                               class="btn btn-outline-secondary btn-sm">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Ainda não publicou nenhuma vaga.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
