@@ -1,46 +1,75 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-<h2>Candidaturas Recebidas</h2>
+<div class="container mt-4">
+    <h2 class="mb-4">Candidaturas Recebidas</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Candidato</th>
-            <th>Vaga</th>
-            <th>Status</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for c in candidaturas %}
-        <tr>
-            <td>{{ c.candidato.nome }}</td>
-            <td>{{ c.vaga.titulo }}</td>
-            <td>
-                {% if c.status == "pendente" %}
-                    <span class="badge bg-secondary">Pendente</span>
-                {% elif c.status == "aceite" %}
-                    <span class="badge bg-success">Aceite</span>
-                {% else %}
-                    <span class="badge bg-danger">Rejeitada</span>
-                {% endif %}
-            </td>
-            <td>
-                {% if c.status == "pendente" %}
-                <form method="post" action="{{ url_for('candidaturas.aceitar_candidatura', id=c.id) }}" style="display:inline;">
-                    <button class="btn btn-sm btn-success">Aceitar</button>
-                </form>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Candidato</th>
+                <th>Vaga</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in candidaturas %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('empresa.ver_candidato', candidato_id=c.candidato.usuario.id) }}">
+                        {{ c.candidato.usuario.nome }}
+                    </a>
+                </td>
 
-                <form method="post" action="{{ url_for('candidaturas.rejeitar_candidatura', id=c.id) }}" style="display:inline;">
-                    <button class="btn btn-sm btn-danger">Rejeitar</button>
-                </form>
-                {% else %}
-                    —
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                <td>{{ c.vaga.titulo }}</td>
+
+                <td>
+                    {% if c.status == "pendente" %}
+                        <span class="badge bg-warning text-dark">Pendente</span>
+                    {% elif c.status == "aceite" %}
+                        <span class="badge bg-success">Aceite</span>
+                    {% elif c.status == "rejeitada" %}
+                        <span class="badge bg-danger">Rejeitada</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ c.status }}</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <!-- Botão Ver Perfil -->
+                    <a href="{{ url_for('empresa.ver_candidato', candidato_id=c.candidato.usuario.id) }}"
+                       class="btn btn-sm btn-primary">
+                        Ver Perfil
+                    </a>
+
+                    {% if c.status == "pendente" %}
+                        <form method="post"
+                              action="{{ url_for('candidaturas.aceitar_candidatura', id=c.id) }}"
+                              class="d-inline">
+                            <button class="btn btn-sm btn-success">
+                                Aceitar
+                            </button>
+                        </form>
+
+                        <form method="post"
+                              action="{{ url_for('candidaturas.rejeitar_candidatura', id=c.id) }}"
+                              class="d-inline">
+                            <button class="btn btn-sm btn-danger">
+                                Rejeitar
+                            </button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center">
+                    Nenhuma candidatura encontrada.
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

@@ -10,7 +10,7 @@ from portal.extensions import login_manager
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = "Malika#10"  # cheve secreta para sessões
+    app.secret_key = "Malika#10"  # chave secreta 
 
     configure(app)
     

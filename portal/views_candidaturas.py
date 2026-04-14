@@ -111,7 +111,7 @@ def candidaturas_empresa():
 
 
 
-# EMPRESA – ACEITAR CANDIDATURA
+# ACEITAR CANDIDATURA
 
 @candidaturas_bp.route("/<int:id>/aceitar", methods=["POST"])
 @login_required
@@ -157,4 +157,28 @@ def rejeitar_candidatura(id):
     db.session.commit()
 
     flash("Candidatura rejeitada.", "warning")
+
     return redirect(url_for("candidaturas.candidaturas_empresa"))
+@candidaturas_bp.route("/perfil/<int:candidatura_id>")
+@login_required
+@role_required("empresa")
+def ver_perfil_candidato(candidatura_id):
+
+    candidatura = Candidatura.query.get_or_404(candidatura_id)
+
+    empresa = Empresa.query.filter_by(
+        usuario_id=current_user.id
+    ).first()
+
+
+    if candidatura.vaga.empresa_id != empresa.id:
+        flash("Acesso não autorizado.", "danger")
+        return redirect(url_for("vagas.minhas_vagas"))
+
+    candidato = candidatura.candidato
+
+    return render_template(
+        "candidaturas/perfil_candidato.html.j2",
+        candidato=candidato,
+        candidatura=candidatura
+    )

@@ -12,7 +12,7 @@ from portal.database import db
 from portal.models import Vaga, Empresa, Candidatura
 from portal.decorators import role_required
 
-# Blueprint
+
 vagas_bp = Blueprint(
     "vagas",
     __name__,
@@ -20,7 +20,7 @@ vagas_bp = Blueprint(
 )
 
 
-#  LISTAR TODAS AS VAGAS (PÚBLICO / CANDIDATO)
+#  LISTAR TODAS AS VAGAS 
 
 @vagas_bp.route("/")
 def listar_vagas():
